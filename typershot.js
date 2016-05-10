@@ -7,10 +7,18 @@ var scoreText = "Score: " + score;
 
 
 function startTypingGame() {
+    
+    $('#game-text-input-wrapper').toggleClass('hidden show');
+    $('#start-game-button').toggleClass('show hidden');
+    $('.cover-heading').addClass('show hidden');
+    
     $('input').focus();
+    
     tsArea.start();
+    // scoreElement = new TextComponent(scoreText, tsArea.size + " " + tsArea.font,
+            // tsArea.canvas.width - 150, 30)
     scoreElement = new TextComponent(scoreText, tsArea.size + " " + tsArea.font,
-            tsArea.canvas.width - 150, 20)
+            tsArea.canvas.width - 150, 30)
 }
 
 
@@ -23,7 +31,7 @@ var tsArea = {
         this.canvas.width = 400;
         this.canvas.height = 500;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        $('.cover-heading').after(this.canvas);
         this.interval = setInterval(updatesArea, 25);
         this.frameNo = 0;
         this.nextFrame; 
@@ -35,7 +43,7 @@ var tsArea = {
         clearInterval(this.interval);
         this.clear();
     },
-    font: "Courier",
+    font: "Helvetica",
     size: "20px",
     style: ("font-family: " + this.font + "; font-size: " + this.size + ";"),
     textHeight: determineFontHeight(this.style)
@@ -75,12 +83,14 @@ function createRandomWord(wordlength){
 
 // This class helps drawing canvas text elements
 
-function TextComponent(text, font, x, y) {
+function TextComponent(text, font, x, y, color) {
     var ctx = tsArea.context;
     this.x = x;
     this.y = y;
     this.text = text;
+    this.color = "#555" || color;
     ctx.font = font;
+    ctx.fillStyle = this.color;
     ctx.fillText(this.text, this.x ,this.y );
     this.update = function(){
         ctx = tsArea.context;
@@ -134,11 +144,14 @@ function gameOver(){
                 tsArea.canvas.height / 2);
     
     var gameOverScore = new TextComponent("",
-            '30px Courier',0 , -100);
+            '30px Courier', 0, -100);
         ctx.textAlign="center";
         ctx.fillText("Ihr Highscore: " + score,
                 tsArea.canvas.width / 2,
                 tsArea.canvas.height / 2 + 50);
+    // $('#game-text-input-wrapper').toggleClass('hidden show');
+    $('#start-game-button').toggleClass('show hidden');
+    $('input').val('');
 }
 
 
