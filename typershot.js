@@ -1,12 +1,24 @@
 "use strict";
 
 var canvasWords = [];
-var scoreElement;
+
 var score = 0;
 var scoreText = "Score: " + score;
+var scoreElement;
+
+var level = 1;
+var levelText = "Level: " + level;
+var levelElement;
+
+var speed = 25;
+var minWordlength = 4;
+var maxWordlength = 4;
+
+var changeLevelAtWords = 6;
+var wordsOfLevel = 0;
 
 
-function startTypingGame() {
+function startTypingGame(){
     
     $('#game-text-input-wrapper').toggleClass('hidden show');
     $('#start-game-button').toggleClass('show hidden');
@@ -15,10 +27,10 @@ function startTypingGame() {
     $('input').focus();
     
     tsArea.start();
-    // scoreElement = new TextComponent(scoreText, tsArea.size + " " + tsArea.font,
-            // tsArea.canvas.width - 150, 30)
     scoreElement = new TextComponent(scoreText, tsArea.size + " " + tsArea.font,
             tsArea.canvas.width - 150, 30)
+    levelElement = new TextComponent(levelText, tsArea.size + " " + tsArea.font,
+            30, 30)
 }
 
 
@@ -27,21 +39,26 @@ function startTypingGame() {
 
 var tsArea = {
     canvas: document.createElement("canvas"),
-    start: function() {
+    start: function(){
         this.canvas.width = 400;
         this.canvas.height = 500;
         this.context = this.canvas.getContext("2d");
-        $('.cover-heading').after(this.canvas);
-        this.interval = setInterval(updatesArea, 25);
+        $('#game-text-input-wrapper').before(this.canvas);
+        this.interval = setInterval(updatesArea, speed);
         this.frameNo = 0;
         this.nextFrame; 
     },
-    clear: function() {
+    clear: function(){
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
-    end: function() {
+    end: function(){
         clearInterval(this.interval);
         this.clear();
+    },
+    updateInterval: function(optionalInterval){
+        var optInterval = optionalInterval || speed;
+        clearInterval(this.interval);
+        this.interval = setInterval(updatesArea, optInterval);
     },
     font: "Helvetica",
     size: "20px",
@@ -52,7 +69,7 @@ var tsArea = {
 
 // returns the text height of a given font style
 
-function determineFontHeight(fontStyle) {
+function determineFontHeight(fontStyle){
   var body = document.getElementsByTagName("body")[0];
   var dummy = document.createElement("div");
   var dummyText = document.createTextNode("M");
@@ -78,12 +95,13 @@ function createRandomWord(wordlength){
     x = chance.natural({min: 1, max: tsArea.canvas.width - textWidth -1})
     y = -tsArea.textHeight;
     canvasWords.push(new TextComponent(text, tsArea.size + " " + tsArea.font, x, y));
+    wordsOfLevel += 1;
 }
 
 
 // This class helps drawing canvas text elements
 
-function TextComponent(text, font, x, y, color) {
+function TextComponent(text, font, x, y, color){
     var ctx = tsArea.context;
     this.x = x;
     this.y = y;
@@ -99,7 +117,7 @@ function TextComponent(text, font, x, y, color) {
     };
 }
 
-// Coninually updates the tsArea. It checks if a word hits the bottom
+// Continually updates the tsArea. It checks if a word hits the bottom
 // and then calls the Game Over screen, empties the canvasWords array
 // and breaks out of the function.
 // If no collision was found it updates thy y coordinate of all words.
@@ -122,12 +140,48 @@ function updatesArea(){
         }
     }
     scoreElement.update();
+    levelElement.update();
     tsArea.frameNo += 1;
     if (tsArea.frameNo === 1 || tsArea.frameNo === tsArea.nextFrame){
         var minFrameNearness = 60;
         tsArea.nextFrame = tsArea.frameNo + minFrameNearness + chance.natural({min: 1, max: 50});
-        createRandomWord(4);
+        createRandomWord(chance.natural({min: minWordlength, max: maxWordlength}));
+        if (wordsOfLevel % changeLevelAtWords === 0){
+            levelUp();
+            if (level >= 4 && (level - 1) % 3 === 0){
+                changeLevelAtWords += 1;
+            }
+        }
     }
+}
+
+
+// Speeds up the game every second level.
+// Every odd level from level 3 on the maximum word length is increased.
+// Every odd level from level 7 on the minimum word length is increased.
+// Increments the level number and updating the level lable
+
+
+function levelUp(){
+    if (level % 2 === 0 ) {
+        speed -= 1;
+        tsArea.updateInterval();
+    }
+    if (level >= 3 && (level - 1)  % 2 === 0 ){
+        maxWordlength += 1;
+    }
+    if (level >= 7 && (level - 3)  % 4 === 0 ){
+        minWordlength += 1;
+    }
+    level += 1;
+    levelElement.text = "Level: " + level;
+    wordsOfLevel = 0;
+    console.log("====== Level Up ======");
+    console.log("level: " + level);
+    console.log("speed: " + speed);
+    console.log("minWordlength: " + minWordlength);
+    console.log("maxWordlength: " + maxWordlength);
+    console.log("changeLevelAtWords: " + changeLevelAtWords);
 }
 
 
@@ -146,7 +200,7 @@ function gameOver(){
     var gameOverScore = new TextComponent("",
             '30px Courier', 0, -100);
         ctx.textAlign="center";
-        ctx.fillText("Ihr Highscore: " + score,
+        ctx.fillText("Your Highscore: " + score,
                 tsArea.canvas.width / 2,
                 tsArea.canvas.height / 2 + 50);
     $('#game-text-input-wrapper').toggleClass('hidden show');
