@@ -3,9 +3,9 @@
 function startTypingGame() {
 	tgArea.start();
 	canvasWords = [];
-	aWordOnCanvas1 = new textComponent('Moin', '30px Arial', 50, 50);
-	aWordOnCanvas2 = new textComponent('Happy', '30px Arial', 151, 150);
-	aWordOnCanvas3 = new textComponent('juhu!', '30px Arial', 251, 250);
+	aWordOnCanvas1 = new textComponent('Moin', '30px Courier', 50, 50);
+	aWordOnCanvas2 = new textComponent('Happy', '30px Courier', 151, 150);
+	aWordOnCanvas3 = new textComponent('juhu!', '30px Courier', 251, 250);
 	canvasWords.push(aWordOnCanvas1);
 	canvasWords.push(aWordOnCanvas2);
 	canvasWords.push(aWordOnCanvas3);
@@ -18,7 +18,7 @@ var tgArea = {
 		this.canvas.height = 500;
 		this.context = this.canvas.getContext("2d");
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-		this.interval = setInterval(updateTGArea, 100);
+		this.interval = setInterval(updateTGArea, 5);
 	},
 	clear : function() {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -41,10 +41,27 @@ function textComponent(text, font, x, y) {
 
 function updateTGArea(){
 	tgArea.clear();
+	console.log('juhu');
 	for (var i = 0; i < canvasWords.length; i++){
+		if (canvasWords[i].y >= tgArea.canvas.height){
+			gameOver();
+			return false;
+		}
 		canvasWords[i].y += 1;
 		canvasWords[i].update();
 	}
+	
+}
+
+function gameOver(){
+	clearInterval(tgArea.interval);
+	tgArea.clear();
+	gameOverMessage = new textComponent(txt = 'GAME OVER',
+										'30px Courier',
+										tgArea.canvas.width/2 - ctx.measureText(txt).width/2,
+										tgArea.canvas.height/2);
+	return true;
+
 }
 	
 $(function() {
