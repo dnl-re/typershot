@@ -5,7 +5,6 @@ var canvasWords = [];
 function startTypingGame() {
     $('input').focus();
     tsArea.start();
-    //createRandomWord(2);
 }
 
 var tsArea = {
@@ -46,15 +45,15 @@ function determineFontHeight(fontStyle) {
 }
 
 
-function createRandomWord(){
-    var text = 'einWort';
+function createRandomWord(wordlength){
+    var text = chance.word({length: wordlength});
     var font;
     var x;
     var y;
     var ctx = tsArea.context;
     var textWidth = ctx.measureText(text).width;
-    x = Math.floor(Math.random() * (tsArea.canvas.width - textWidth -1) + 1);
-    y = - tsArea.textHeight;
+    x = chance.natural({min: 1, max: tsArea.canvas.width - textWidth -1})
+    y = -tsArea.textHeight;
     canvasWords.push(new TextComponent(text, tsArea.size + " " + tsArea.font, x, y));
 }
 
@@ -87,9 +86,9 @@ function updatesArea(){
     }
     tsArea.frameNo += 1;
     if (tsArea.frameNo === 1 || tsArea.frameNo === tsArea.nextFrame){
-        var wordNearness = 100;
-        tsArea.nextFrame = tsArea.frameNo + Math.floor(Math.random() * wordNearness + tsArea.textHeight * 2);
-        createRandomWord();
+        var minFrameNearness = 60;
+        tsArea.nextFrame = tsArea.frameNo + minFrameNearness + chance.natural({min: 1, max: 50});
+        createRandomWord(4);
     }
 }
 
@@ -112,5 +111,4 @@ $(function() {
             }
         }
     });
-
 });
