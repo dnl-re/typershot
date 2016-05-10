@@ -17,6 +17,7 @@ var maxWordlength = 4;
 var changeLevelAtWords = 6;
 var wordsOfLevel = 0;
 
+var backgroundImageNumber = 1;
 
 function startTypingGame(){
     
@@ -169,6 +170,11 @@ function levelUp(){
     }
     if (level >= 3 && (level - 1)  % 2 === 0 ){
         maxWordlength += 1;
+        backgroundImageNumber += 1;
+        if (backgroundImageNumber == 7) {backgroundImageNumber = 1;}
+        $('body').fadeTo('slow', 0.3, function() {
+            $(this).css('background-image', 'url(img/background-bild' + backgroundImageNumber +'.jpg)');
+        }).fadeTo('slow', 1);
     }
     if (level >= 7 && (level - 3)  % 4 === 0 ){
         minWordlength += 1;
