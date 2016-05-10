@@ -149,7 +149,7 @@ function gameOver(){
         ctx.fillText("Ihr Highscore: " + score,
                 tsArea.canvas.width / 2,
                 tsArea.canvas.height / 2 + 50);
-    // $('#game-text-input-wrapper').toggleClass('hidden show');
+    $('#game-text-input-wrapper').toggleClass('hidden show');
     $('#start-game-button').toggleClass('show hidden');
     $('input').val('');
 }
