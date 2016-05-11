@@ -24,7 +24,7 @@ function startTypingGame(){
     $('#game-text-input-wrapper').toggleClass('hidden show');
     $('#start-game-button').toggleClass('show hidden');
     $('.cover-heading').addClass('show hidden');
-    
+    updateBackgroundImage();
     $('input').focus();
     
     tsArea.start();
@@ -66,6 +66,23 @@ var tsArea = {
     textHeight: determineFontHeight(this.style)
 };
 
+function resetglobalVars(){
+
+    score = 0;
+    scoreText = "Score: " + score;
+
+    level = 1;
+    levelText = "Level: " + level;
+
+    speed = 25;
+    minWordlength = 4;
+    maxWordlength = 4;
+
+    changeLevelAtWords = 6;
+    wordsOfLevel = 0;
+
+    backgroundImageNumber = 1;
+}
 
 // returns the text height of a given font style
 
@@ -172,9 +189,7 @@ function levelUp(){
         maxWordlength += 1;
         backgroundImageNumber += 1;
         if (backgroundImageNumber == 7) {backgroundImageNumber = 1;}
-        $('body').fadeTo('slow', 0.3, function() {
-            $(this).css('background-image', 'url(img/background-bild' + backgroundImageNumber +'.jpg)');
-        }).fadeTo('slow', 1);
+        updateBackgroundImage();
     }
     if (level >= 7 && (level - 3)  % 4 === 0 ){
         minWordlength += 1;
@@ -213,6 +228,13 @@ function gameOver(){
     $('#game-text-input-wrapper').toggleClass('hidden show');
     $('#start-game-button').toggleClass('show hidden');
     $('input').val('');
+    resetglobalVars();
+}
+
+function updateBackgroundImage(){
+    $('body').fadeTo('slow', 0.3, function() {
+            $(this).css('background-image', 'url(img/background-bild' + backgroundImageNumber +'.jpg)');
+    }).fadeTo('slow', 1);
 }
 
 
@@ -234,3 +256,61 @@ $(function() {
         }
     });
 });
+
+// Makes the setting icon spin and calls the settings modal
+
+$(function() {
+    $('#settings-spinner')
+            .hover(
+                function(){$('#settings-spinner').toggleClass('fa-spin')},
+                function(){$('#settings-spinner').toggleClass('fa-spin')});
+    $('#settings-spinner').click(function(){$('#myModal').modal('show')});
+});
+
+
+// Makes the range bars work in the settings modal
+
+var range1slider = $('#range1').slider({
+	formatter: function(value) {
+        $('#range1val').text(value);
+		return 'Current value: ' + value;
+	}
+});
+var range2slider = $('#range2').slider({
+	formatter: function(value) {
+        $('#range2val').text(value);
+		return 'Current value: ' + value;
+	}
+});
+var range3slider = $('#range3').slider({
+	formatter: function(value) {
+        $('#range3val').text(value);
+		return 'Current value: ' + value;
+	}
+});
+var range4slider = $('#range4').slider({
+	formatter: function(value) {
+        $('#range4val').text(value);
+		return 'Current value: ' + value;
+	}
+});
+var range5slider = $('#range5').slider({
+	formatter: function(value) {
+        $('#range5val').text(value);
+		return 'Current value: ' + value;
+	}
+});
+
+
+// Writes the values from the settings modal to the global variables
+
+function saveSettings(){
+    speed = 1000 / range1slider.slider('getValue');
+    minWordlength = range2slider.slider('getValue');
+    maxWordlength = range3slider.slider('getValue');
+    backgroundImageNumber = range4slider.slider('getValue');
+    //$('body').animate({background : url('img/background-bild' + backgroundImageNumber + '.jpg') }, 600);
+    updateBackgroundImage();
+    changeLevelAtWords = range5slider.slider('getValue');
+}
+

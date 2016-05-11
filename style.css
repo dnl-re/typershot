@@ -205,3 +205,30 @@ body {
   -o-background-size: cover;
   background-size: cover;
 }
+
+#settings-spinner {
+    font-size: 25px;
+    margin-top: 10px;
+}
+
+.modal-dialog {
+    color: #555;
+    text-shadow: 0 0px 1px rgba(0,0,0,.2);
+}
+
+.modal-body {
+    text-align: left;
+}
+
+.slider {
+    float: right;
+}
+
+.slider.slider-horizontal {
+    width: 170px;
+    height: 20px;
+}
+
+#ex1Slider .slider-selection {
+	background: #BABABA;
+}

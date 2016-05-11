@@ -14,6 +14,8 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" >
+    <link rel="stylesheet" href="./bootstrap-slider/dist/css/bootstrap-slider.min.css" >
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug 
     <link href="./bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet"> -->
@@ -37,9 +39,15 @@
           <div class="masthead clearfix">
             <div class="inner">
               <h3 class="masthead-brand">typershot</h3>
+              <nav>
+                <ul class="nav masthead-nav">
+                    <i id="settings-spinner" class="fa fa-cog fa-2x fa-fw margin-bottom"></i>
+                    <span class="sr-only">Loading...</span>
+                </ul>
+              </nav>
             </div>
           </div>
-
+          
           <div class="inner cover" id="canvas-wrapper">
             <h1 class="cover-heading">Warm up your fingers<br />for a round of typershot!</h1>
             <h3 class="cover-heading">It gets pretty hard pretty fast ;-)</h3>
@@ -54,7 +62,7 @@
 
           <div class="mastfoot">
             <div class="inner">
-              <p>Made in one and a half days by daniel</p>
+              <p>Made in <a href="https://github.com/dnl-re/typershot" target="_blank">one and a half days</a> by daniel</p>
             </div>
           </div>
 
@@ -62,6 +70,46 @@
 
       </div>
 
+    </div>
+    
+    
+    <!-- Settings Modal -->
+          
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Frames</h4>
+                    <p>Configure the speed of the game:
+                    <input id="range1" class="settings-slider" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="200" data-slider-step="1" data-slider-value="40"/><span id="range1val"></span> Frames</p>
+                    <br />
+                    <h4>Minimum Word Length</h4>
+                    <p>The Game starts with words of minimum this size:
+                    <input id="range2" class="settings-slider" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="30" data-slider-step="1" data-slider-value="4"/>
+                    <span id="range2val"></span> Words</p>
+                    <br />
+                    <h4>Maximum Word Length</h4>
+                    <p>The Game starts with words of maximum this size:
+                    <input id="range3" class="settings-slider" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="30" data-slider-step="1" data-slider-value="4"/><span id="range3val"></span> Words</p>
+                    <br />
+                    <h4>Background Image</h4>
+                    <p>The Game starts with a different background image:
+                    <input id="range4" class="settings-slider" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="6" data-slider-step="1" data-slider-value="1"/><br /><span id="range4val"></span>. Background Image</p>
+                    <br />
+                    <h4>Words in One Level</h4>
+                    <p>The first level will have following number of words:
+                    <input id="range5" class="settings-slider" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="50" data-slider-step="1" data-slider-value="6"/><span id="range5val"></span> Words</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveSettings();" data-dismiss="modal">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap core JavaScript
@@ -71,6 +119,7 @@
     <script>window.jQuery || document.write('<script src="./bootstrap/docs/assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="./bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="http://chancejs.com/chance.min.js"></script>
+    <script src="./bootstrap-slider/dist/bootstrap-slider.min.js"></script>
     <script src="./typershot.js" ></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="./bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
