@@ -232,9 +232,7 @@ function gameOver(){
 }
 
 function updateBackgroundImage(){
-    $('body').fadeTo('slow', 0.3, function() {
-            $(this).css('background-image', 'url(img/background-bild' + backgroundImageNumber +'.jpg)');
-    }).fadeTo('slow', 1);
+    $('#bg').animate({opacity: 0}, 'slow', function() { $(this).css({'background-image': 'url(img/background-bild' + backgroundImageNumber +'.jpg)'}).animate({opacity: 1}); });
 }
 
 
@@ -309,7 +307,6 @@ function saveSettings(){
     minWordlength = range2slider.slider('getValue');
     maxWordlength = range3slider.slider('getValue');
     backgroundImageNumber = range4slider.slider('getValue');
-    //$('body').animate({background : url('img/background-bild' + backgroundImageNumber + '.jpg') }, 600);
     updateBackgroundImage();
     changeLevelAtWords = range5slider.slider('getValue');
 }
