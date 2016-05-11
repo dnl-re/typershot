@@ -54,7 +54,6 @@ var tsArea = {
     },
     end: function(){
         clearInterval(this.interval);
-        this.clear();
     },
     updateInterval: function(optionalInterval){
         var optInterval = optionalInterval || speed;
@@ -71,16 +70,16 @@ var tsArea = {
 // returns the text height of a given font style
 
 function determineFontHeight(fontStyle){
-  var body = document.getElementsByTagName("body")[0];
-  var dummy = document.createElement("div");
-  var dummyText = document.createTextNode("M");
-  dummy.appendChild(dummyText);
-  dummy.setAttribute("style", fontStyle);
-  body.appendChild(dummy);
-  var result = dummy.offsetHeight;
-  body.removeChild(dummy);
-  return result;
-  // src: http://bit.ly/1T7BZFx
+    var body = document.getElementsByTagName("body")[0];
+    var dummy = document.createElement("div");
+    var dummyText = document.createTextNode("M");
+    dummy.appendChild(dummyText);
+    dummy.setAttribute("style", fontStyle);
+    body.appendChild(dummy);
+    var result = dummy.offsetHeight;
+    body.removeChild(dummy);
+    return result;
+    // src: http://bit.ly/1T7BZFx
 }
 
 
@@ -119,8 +118,7 @@ function TextComponent(text, font, x, y, color){
 }
 
 // Continually updates the tsArea. It checks if a word hits the bottom
-// and then calls the Game Over screen, empties the canvasWords array
-// and breaks out of the function.
+// and then calls the Game Over screen, empties the canvasWords array.
 // If no collision was found it updates thy y coordinate of all words.
 // It then redraws the words and also the scoreElement.
 // The frame number is incremented and it is checked if another word
@@ -129,19 +127,21 @@ function TextComponent(text, font, x, y, color){
 
 function updatesArea(){
     tsArea.clear();
+    var collision = false;
     for (var i = 0; i < canvasWords.length; i += 1){
+        canvasWords[i].y += 1;
+        canvasWords[i].update();
         if (canvasWords[i].y >= tsArea.canvas.height){
-            gameOver();
-            canvasWords = [];
-            return false;
-        }
-        else {
-            canvasWords[i].y += 1;
-            canvasWords[i].update();
+            collision = true;
         }
     }
-    scoreElement.update();
     levelElement.update();
+    if (collision){
+        gameOver();
+        canvasWords = [];
+        return false;
+    }
+    scoreElement.update();
     tsArea.frameNo += 1;
     if (tsArea.frameNo === 1 || tsArea.frameNo === tsArea.nextFrame){
         var minFrameNearness = 60;
@@ -196,19 +196,20 @@ function levelUp(){
 function gameOver(){
     tsArea.end();
     var ctx = tsArea.context;
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillRect(0, 0, tsArea.canvas.width, tsArea.canvas.height);
     var gameOverMessage = new TextComponent("",
-            '30px Courier',0 , -100);
+            '30px Helvetica',0 , -100);
         ctx.textAlign="center";
         ctx.fillText("GAME OVER",
                 tsArea.canvas.width / 2,
                 tsArea.canvas.height / 2);
-    
     var gameOverScore = new TextComponent("",
-            '30px Courier', 0, -100);
+            '30px Helvetica', 0, -100);
         ctx.textAlign="center";
         ctx.fillText("Your Highscore: " + score,
                 tsArea.canvas.width / 2,
-                tsArea.canvas.height / 2 + 50);
+                tsArea.canvas.height / 2 + 40);
     $('#game-text-input-wrapper').toggleClass('hidden show');
     $('#start-game-button').toggleClass('show hidden');
     $('input').val('');
